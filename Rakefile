@@ -11,7 +11,7 @@ end
 task :scrape_rooms do
   # instantiate a scraper, and then have it find new rooms
   nyc_scraper = RoomScraper.new('https://newyork.craigslist.org/search/roo')
-  nyc_scraper.call
+  nyc_scraper.call #runs nyc_scraper. Call means run
   chicago_scraper = RoomScraper.new('https://chicago.craigslist.org/search/roo')
   chicago_scraper.call
   # london_scraper = RoomScraper.new("http://london.craigslist.co.uk/search/roo")

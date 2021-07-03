@@ -1,11 +1,11 @@
 class RoomScraper
 
-  def initialize(index_url)
+  def initialize(index_url) #from rakefile
     @index_url = index_url
     @doc = Nokogiri::HTML(open(index_url))
   end
 
-  def call
+  def call #see code below
     rows.each do |row_doc|
       Room.create_from_hash(scrape_row(row_doc)) #=> Should put the room in my database.
     end
@@ -14,6 +14,8 @@ class RoomScraper
   private
     def rows
       @rows ||= @doc.search("div.content span.rows p.row")
+      #||= or equal operator so if the left doesn't exist then it equals the right
+      #want an array of the attributes as the return
     end
 
     def scrape_row(row)

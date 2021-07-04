@@ -1,6 +1,7 @@
-# class Room < ActiveRecord::Base
-# end
-
+class Room < ActiveRecord::Base
+end
+#below wasn't used in this class
+#see room_orm for updated code
 attr_accessor :title, :date_create, :price, :url
 
 def self.create_from_hash(hash)
@@ -36,13 +37,24 @@ def self.new_from_db(row)
     end
 end
 
+# def self.by_price(order = "ASC")
+#     case order
+#     when "ASC"
+#         self.all.sort by {|r| r.price}
+#     when "DESC"
+#         self.all.sort by {|r| r.price}.reverse
+#     end
+# end
+#this is using Ruby instead of SQL
+#You want to rely on the database of SQL instead of Ruby whenever possible
+
 def self.by_price(order = "ASC")
-    case order
-    when "ASC"
-        self.all.sort by {|r| r.price}
-    when "DESC"
-        self.all.sort by {|r| r.price}.reverse
-    end
+    sql = <<-SQL
+        SELECT * FROM rooms ORDER BY price #{order}
+    SQL
+
+    rows = DB[:conn].execute(sql)
+    self.new_from_rows(rows)
 end
 
 
@@ -52,6 +64,13 @@ def self.all
     SQL
 
     rows = DB[:conn].execute(sql)
+    # rows.collect do |row|
+    #     self.new_from_db(row)
+    # end
+    self.new_from_rows(rows)
+end
+
+def self.new_from_rows(rows)
     rows.collect do |row|
         self.new_from_db(row)
     end
